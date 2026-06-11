@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dynamic banner variations · CSS to Core</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --primary:#109CD9; --fg:#1E1E1E; --muted:#576875; --faint:#7D89A1;
+    --border:#E8E9EE; --subtle:#F3F5F6; --bg:#FFFFFF; --pink:#E33B8C; --core:#0C79AC;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{font-family:'Inter',sans-serif;background:#ECEEF1;color:var(--fg);-webkit-font-smoothing:antialiased}
+  .page{max-width:1120px;margin:0 auto;padding:48px 32px 80px}
+
+  /* header */
+  .head{margin-bottom:40px}
+  .eyebrow{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--primary);margin:0 0 10px}
+  h1{font-size:30px;font-weight:600;letter-spacing:-.02em;margin:0 0 12px}
+  .lead{font-size:15px;line-height:22px;color:var(--muted);max-width:680px;margin:0}
+  .legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+  .tag{display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border-radius:40px;background:var(--bg);border:1px solid var(--border);font-size:12px;font-weight:500;color:var(--muted)}
+  .tag .dot{width:8px;height:8px;border-radius:50%}
+
+  /* section */
+  section{margin-top:44px}
+  .sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:6px}
+  .sec-head h2{font-size:18px;font-weight:600;margin:0}
+  .sec-head .where{font-size:13px;color:var(--faint)}
+  .sec-sub{font-size:13px;line-height:18px;color:var(--muted);margin:0 0 20px;max-width:720px}
+
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+  @media (max-width:760px){.grid{grid-template-columns:1fr}}
+
+  /* card */
+  .card{background:var(--bg);border-radius:12px;box-shadow:0 1px 2px rgba(0,0,0,.05),0 1px 12px rgba(0,0,0,.05);overflow:hidden;display:flex;flex-direction:column}
+  .card.full{grid-column:1 / -1}
+  .card-top{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:14px 18px;border-bottom:1px solid var(--border)}
+  .card-label{font-size:13px;font-weight:600;color:var(--fg)}
+  .pill{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:40px;font-size:11px;font-weight:600}
+  .pill-dynamic{background:#E2F4FD;color:var(--core)}
+  .pill-static{background:var(--subtle);color:var(--muted)}
+
+  /* the actual rendered hint */
+  .stage{padding:22px 18px;background:#FBFCFD}
+  .placement-note{font-size:11px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;color:var(--faint);margin:0 0 10px}
+  .hint{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .hint .ico{flex:none}
+  .hint .txt{font-size:13px;color:var(--muted)}
+  .hint .lnk{display:inline-flex;align-items:center;gap:5px;color:var(--primary);font-size:13px;font-weight:500;cursor:default}
+  .hint .lnk svg{display:block}
+
+  .card-foot{padding:12px 18px;border-top:1px solid var(--border);background:var(--bg)}
+  .card-foot p{margin:0;font-size:12px;line-height:17px;color:var(--muted)}
+  .card-foot strong{color:var(--fg);font-weight:600}
+
+  /* variation list (dynamic pool) */
+  .pool{padding:6px 18px 18px;background:#FBFCFD}
+  .pool .row{display:flex;align-items:center;gap:8px;padding:9px 0;border-top:1px solid var(--border);font-size:13px;color:var(--muted)}
+  .pool .row:first-child{border-top:none}
+  .pool .attr{margin-left:auto;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;color:var(--faint);background:var(--subtle);padding:2px 7px;border-radius:4px}
+  .count{color:var(--core);font-weight:600;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="head">
+    <p class="eyebrow">CSS → Core · conversion surfaces</p>
+    <h1>Dynamic banner variations</h1>
+    <p class="lead">Every contextual moment in the CSS Merchants tool, shown exactly as it renders, with its placement and data source. These are deliberately quiet, inline hints (not boxed banners) that sit inside the merchant's existing workflow. Each opens the Storylane tour, then the guided onboarding.</p>
+    <div class="legend">
+      <span class="tag"><span class="dot" style="background:var(--primary)"></span> Dynamic · re-rolls from Merchant API on every refresh</span>
+      <span class="tag"><span class="dot" style="background:var(--faint)"></span> Static · fixed contextual copy</span>
+    </div>
+  </header>
+
+  <!-- DASHBOARD -->
+  <section>
+    <div class="sec-head"><h2>Dashboard</h2><span class="where">top of Label performance, above the donuts</span></div>
+    <p class="sec-sub">Pulls a Core-fixable disapproval from the Merchant API (productstatuses, resolution: merchant_action) and names it with the affected attribute and product count. Re-rolls on every page load.</p>
+    <div class="grid">
+      <div class="card">
+        <div class="card-top"><span class="card-label">Dashboard hint</span><span class="pill pill-dynamic">Dynamic</span></div>
+        <div class="stage">
+          <p class="placement-note">As rendered</p>
+          <div class="hint">
+            <span class="ico" data-icon="info" data-color="var(--muted)"></span>
+            <span class="txt">312 products are disapproved for a missing required attribute (gtin).</span>
+            <span class="lnk">See how Core can solve this <span data-icon="arrow"></span></span>
+          </div>
+        </div>
+        <div class="card-foot"><p><strong>Data:</strong> issue label + attribute + count are randomized from the Core-fixable pool below. <strong>CTA:</strong> opens Storylane → Create project → onboarding.</p></div>
+      </div>
+
+      <div class="card">
+        <div class="card-top"><span class="card-label">Same slot, another refresh</span><span class="pill pill-dynamic">Dynamic</span></div>
+        <div class="stage">
+          <p class="placement-note">As rendered</p>
+          <div class="hint">
+            <span class="ico" data-icon="info" data-color="var(--muted)"></span>
+            <span class="txt">128 products are disapproved for an image that is too small (image_link).</span>
+            <span class="lnk">See how Core can solve this <span data-icon="arrow"></span></span>
+          </div>
+        </div>
+        <div class="card-foot"><p>Same placement and template, different issue — shows how the copy varies between sessions.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPORTS -->
+  <section>
+    <div class="sec-head"><h2>Exports</h2><span class="where">below the supplemental-source setup steps</span></div>
+    <p class="sec-sub">Also Merchant-API driven, but framed around the export: it names the blocking issue and the specific Core fix. Re-rolls on every page load.</p>
+    <div class="grid">
+      <div class="card">
+        <div class="card-top"><span class="card-label">Exports hint</span><span class="pill pill-dynamic">Dynamic</span></div>
+        <div class="stage">
+          <p class="placement-note">As rendered</p>
+          <div class="hint">
+            <span class="ico" data-icon="info" data-color="var(--muted)"></span>
+            <span class="txt">204 products are blocked by a price mismatch with the landing page (price). Core can keep price in sync automatically.</span>
+            <span class="lnk">See how Core can solve this <span data-icon="arrow"></span></span>
+          </div>
+        </div>
+        <div class="card-foot"><p><strong>Data:</strong> issue + attribute + count + the matching Core fix, all from the pool below.</p></div>
+      </div>
+
+      <div class="card">
+        <div class="card-top"><span class="card-label">Same slot, another refresh</span><span class="pill pill-dynamic">Dynamic</span></div>
+        <div class="stage">
+          <p class="placement-note">As rendered</p>
+          <div class="hint">
+            <span class="ico" data-icon="info" data-color="var(--muted)"></span>
+            <span class="txt">461 products are blocked by no shipping service defined (shipping). Core can set shipping with a rule.</span>
+            <span class="lnk">See how Core can solve this <span data-icon="arrow"></span></span>
+          </div>
+        </div>
+        <div class="card-foot"><p>Same placement and template, different issue and fix.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DYNAMIC POOL -->
+  <section>
+    <div class="sec-head"><h2>Core-fixable issue pool</h2><span class="where">source for the Dashboard &amp; Exports hints</span></div>
+    <p class="sec-sub">The twelve Merchant-API issues Core's rules engine can actually fix (policy violations are excluded). On each refresh the hint draws one of these with a randomized affected-product count.</p>
+    <div class="grid">
+      <div class="card full">
+        <div class="card-top"><span class="card-label">All 12 variations</span><span class="pill pill-dynamic">Dynamic</span></div>
+        <div class="pool" id="pool"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCTS -->
+  <section>
+    <div class="sec-head"><h2>Products</h2><span class="where">above the products table</span></div>
+    <p class="sec-sub">Static contextual nudge tied to the title-editing workflow on this page.</p>
+    <div class="grid">
+      <div class="card">
+        <div class="card-top"><span class="card-label">Products hint</span><span class="pill pill-static">Static</span></div>
+        <div class="stage">
+          <p class="placement-note">As rendered</p>
+          <div class="hint">
+            <span class="ico" data-icon="info" data-color="var(--core)"></span>
+            <span class="txt">Updating product titles one by one? Rules optimize your entire catalogue at once.</span>
+            <span class="lnk">See how Core can solve this <span data-icon="arrow"></span></span>
+          </div>
+        </div>
+        <div class="card-foot"><p><strong>Accent:</strong> Core blue info icon. Tied to the title column / product editing flow.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCT DRAWER -->
+  <section>
+    <div class="sec-head"><h2>Product detail fly-in</h2><span class="where">inside the drawer that opens when a product row is clicked</span></div>
+    <p class="sec-sub">Two in-workflow nudges placed where the merchant is already working — under the title optimizer, and beside the GTIN / benchmark row. The GTIN nudge only appears when the product is missing a GTIN.</p>
+    <div class="grid">
+      <div class="card">
+        <div class="card-top"><span class="card-label">Under the title optimizer</span><span class="pill pill-static">Static</span></div>
+        <div class="stage">
+          <p class="placement-note">As rendered</p>
+          <div class="hint">
+            <span class="ico" data-icon="info" data-color="var(--core)"></span>
+            <span class="txt">Setting titles one product at a time? Core writes title rules per category once.</span>
+            <span class="lnk">See how title rules work <span data-icon="arrow"></span></span>
+          </div>
+        </div>
+        <div class="card-foot"><p>Sits below the “Save title” button, divided by a hairline.</p></div>
+      </div>
+
+      <div class="card">
+        <div class="card-top"><span class="card-label">Beside the GTIN row</span><span class="pill pill-static">Static · conditional</span></div>
+        <div class="stage">
+          <p class="placement-note">As rendered</p>
+          <div class="hint">
+            <span class="ico" data-icon="info" data-color="var(--muted)"></span>
+            <span class="txt">Add a GTIN to unlock price benchmarks for this product.</span>
+            <span class="lnk">Add with a rule <span data-icon="arrow"></span></span>
+          </div>
+        </div>
+        <div class="card-foot"><p>Shown only when the product’s benchmark/GTIN is missing.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LABELIZER -->
+  <section>
+    <div class="sec-head"><h2>Labelizer</h2><span class="where">directly below the Labelizer performance table</span></div>
+    <p class="sec-sub">Static nudge connecting low-ROAS Villains to feed quality, in the brand pink accent.</p>
+    <div class="grid">
+      <div class="card">
+        <div class="card-top"><span class="card-label">Labelizer hint</span><span class="pill pill-static">Static</span></div>
+        <div class="stage">
+          <p class="placement-note">As rendered</p>
+          <div class="hint">
+            <span class="ico" data-icon="info" data-color="var(--pink)"></span>
+            <span class="txt">Villains spent 94.61 at 35.91% ROAS. Feed quality is a common cause.</span>
+            <span class="lnk">See how Core can solve this <span data-icon="arrow"></span></span>
+          </div>
+        </div>
+        <div class="card-foot"><p><strong>Accent:</strong> Villains pink info icon. Numbers reflect the Villains row in the table above.</p></div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  // icon set (matches the prototype's lucide Info + ArrowRight)
+  const ICON = {
+    info: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="COLOR" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>',
+    arrow: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>',
+  };
+  document.querySelectorAll('[data-icon]').forEach(function(el){
+    var kind = el.getAttribute('data-icon');
+    var color = el.getAttribute('data-color') || 'currentColor';
+    el.innerHTML = (ICON[kind] || '').replace('COLOR', color);
+  });
+
+  // dynamic pool (mirrors CORE_FIXABLE_ISSUES in App.tsx)
+  var POOL = [
+    { label:"a missing required attribute", attr:"gtin", fix:"map it from your barcode field with a rule" },
+    { label:"an image that is too small", attr:"image_link", fix:"swap to a larger image variant" },
+    { label:"a price mismatch with the landing page", attr:"price", fix:"keep price in sync automatically" },
+    { label:"a missing attribute for its product type", attr:"color", fix:"fill it from your data" },
+    { label:"an availability mismatch", attr:"availability", fix:"keep availability in sync" },
+    { label:"a generic image", attr:"image_link", fix:"replace placeholder images" },
+    { label:"a missing related attribute", attr:"size", fix:"derive it with a rule" },
+    { label:"an invalid attribute value", attr:"condition", fix:"normalise the value" },
+    { label:"no shipping service defined", attr:"shipping", fix:"set shipping with a rule" },
+    { label:"an attribute value that is too long", attr:"title", fix:"trim it with a rule" },
+    { label:"a missing required sub-attribute", attr:"product_detail", fix:"complete it with a rule" },
+    { label:"an invalid enum value", attr:"size_type", fix:"map it to a valid value" },
+  ];
+  var pool = document.getElementById('pool');
+  POOL.forEach(function(it){
+    var row = document.createElement('div');
+    row.className = 'row';
+    row.innerHTML = '<span class="ico">' + ICON.info.replace('COLOR','var(--faint)') + '</span>'
+      + '<span><span class="count">{count}</span> products disapproved for ' + it.label + '</span>'
+      + '<span class="attr">' + it.attr + '</span>';
+    pool.appendChild(row);
+  });
+</script>
+
+<template id="__bundler_thumbnail">
+<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+  <rect width="240" height="240" rx="28" fill="#109CD9"/>
+  <rect x="48" y="86" width="144" height="30" rx="6" fill="#fff" opacity="0.95"/>
+  <rect x="48" y="126" width="104" height="30" rx="6" fill="#fff" opacity="0.6"/>
+  <circle cx="63" cy="101" r="6" fill="#109CD9"/>
+  <circle cx="63" cy="141" r="6" fill="#109CD9"/>
+</svg>
+</template>
+</body>
+</html>
